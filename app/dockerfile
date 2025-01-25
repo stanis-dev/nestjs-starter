@@ -1,0 +1,30 @@
+FROM node:23-slim AS base
+
+# enable pnpm config
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
+# dependency for --watch sync
+RUN apt-get update && apt-get install -y procps
+
+# WARNING: all operations requiring elevated permissions must be completed before this point!
+
+# NOTE: see https://docs.docker.com/compose/how-tos/file-watch/#prerequisites
+# --watch requires container's USER can write to the target path
+# so we run as a non-privileged user
+RUN useradd -ms /bin/sh -u 1001 app
+USER app
+
+WORKDIR /app
+
+# pnpm requires only lock file
+COPY pnpm-lock.yaml ./
+RUN pnpm fetch --prod
+
+# NOTE:
+
+# --chown ensures files are owned by configured user
+COPY --chown=app:app . /app
+
+CMD [ "pnpm", "start:debug" ]

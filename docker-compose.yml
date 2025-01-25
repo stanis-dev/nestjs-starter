@@ -1,0 +1,35 @@
+services:
+  app:
+    build:
+      context: ./app
+    ports:
+      - 3000:3000
+    # hot reload
+    develop:
+      watch:
+        - action: sync
+          path: ./app/src
+          target: /app/src
+          ignore:
+            - node_modules/
+    depends_on:
+      - postgres
+    environment:
+      # pg setup
+      POSTGRES_USER: ${POSTGRES_USER:?error}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?error}
+      POSTGRES_HOST: ${POSTGRES_HOST:?error}
+      POSTGRES_PORT: 5432
+      POSTGRES_CONNECTION_STRING: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}"
+
+  postgres:
+    image: postgres:17.2-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?error}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:
