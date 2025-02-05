@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+    "name": "Debug NestJS App in Docker",
+    "type": "node",
+    "request": "attach",
+    "protocol": "inspector",
+    "port": 9229,
+    "address": "localhost",
+    "localRoot": "${workspaceRoot}",
+    "remoteRoot": "/app",
+    "skipFiles": ["<node_internals>/**"]
+    }
+  ]
+}

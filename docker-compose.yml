@@ -3,6 +3,7 @@ services:
     build:
       context: ./app
     ports:
+      - 9229:9229
       - 3000:3000
     # hot reload
     develop:
@@ -19,8 +20,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:?error}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?error}
       POSTGRES_HOST: ${POSTGRES_HOST:?error}
-      POSTGRES_PORT: 5432
-      POSTGRES_CONNECTION_STRING: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}"
+      POSTGRES_CONNECTION_STRING: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:5432"
 
   postgres:
     image: postgres:17.2-alpine
